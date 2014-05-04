@@ -1,0 +1,7 @@
+README
+
+Developed for Controls Project Spring 2014 Olin College
+
+Goal: Send input servo commands, read thrust direction with homemade 6dof force sensor
+
+Servo commands are sent in a sweep.  Sequence is for servos to move one at a time and then simultaneously in the hope to map thrust direction.
