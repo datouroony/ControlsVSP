@@ -4,4 +4,8 @@ Developed for Controls Project Spring 2014 Olin College
 
 Goal: Send input servo commands, read thrust direction with homemade 6dof force sensor
 
-Servo commands are sent in a sweep.  Sequence is for servos to move one at a time and then simultaneously in the hope to map thrust direction.
+Servo commands for min and max values are sent to the arduino. 
+Ex. (Ch1,Ch2)
+(min, max) (min,neutral) (min, min)
+(neutral, max) (neutral, neutral) (neutral, min)
+(max,max) (max, neutral) (max, min)
