@@ -5,14 +5,14 @@ Servo Yservo;
  
 void setup() 
 { 
-  Xservo.attach(8);  // attaches the servo on pin 9 to the servo object 
-  Yservo.attach(7);  // attaches the servo on pin 9 to the servo object 
+  Xservo.attach(8);  // attaches the servo on pin 8 to the servo object 
+  Yservo.attach(7);  // attaches the servo on pin 7 to the servo object 
 } 
  
 void go_to_pos(char* pos){
   if (pos = "btm"){
-      Xservo.write(170);
-      Yservo.write(80);
+      Xservo.write(100);
+      Yservo.write(92);
   }
 }
  
