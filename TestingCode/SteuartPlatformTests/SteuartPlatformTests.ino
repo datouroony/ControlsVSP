@@ -30,6 +30,10 @@ void setup(void) {
   Serial.begin(9600);
 }
 
+void calculate_Lenght(){
+  
+}
+
 void loop(void) {
 
   S0V = (1023.0 / analogRead(SENSOR0)) - 1.0;
