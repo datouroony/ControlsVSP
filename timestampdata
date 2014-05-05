@@ -1,0 +1,9 @@
+import time
+
+##12 hr format
+print(time.strftime("%I:%M:%S"))
+
+# string is a
+a ="s,a,b,c,d/n,c,number"
+#split at newline
+a.split('\n')[:-1]

@@ -74,7 +74,11 @@ def main():
       line = ser.readline()
       data = [float(val) for val in line.split()]
       #print data
-      if(len(data) == 2):
+      # expected string looks like "s,5,4,3,\nc,1"
+      if(len(data) == 4):
+        analogData.add(data)
+        analogPlot.update(analogData)
+      if(len)(data) == 2):
         analogData.add(data)
         analogPlot.update(analogData)
     except KeyboardInterrupt:
