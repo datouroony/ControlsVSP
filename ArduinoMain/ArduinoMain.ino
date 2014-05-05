@@ -28,10 +28,18 @@ int ypos;
 
 void setup() 
 { 
-<<<<<<< HEAD
   Xservo.attach(8);  // attaches the servo on pin 9 to the servo object 
   Yservo.attach(7);  // attaches the servo on pin 9 to the servo object 
   motor.attach(9);
+  delay(1000);
+  //initializes the motor
+  motor.write(40);
+  for(pos = 44;pos <  50; pos += 1)   
+  {                                  
+    motor.write(pos); 
+    delay(100);    
+  } 
+  motor.write(44);
   
   Serial.begin(9600);
 } 
@@ -80,21 +88,13 @@ void collect_data(){
       Serial.print(", ");
       Serial.print(force);
     }
-=======
-  Xservo.attach(8);  // attaches the servo on pin 8 to the servo object 
-  Yservo.attach(7);  // attaches the servo on pin 7 to the servo object 
-} 
- 
-void go_to_pos(char* pos){
-  if (pos = "btm"){
-      Xservo.write(100);
-      Yservo.write(92);
->>>>>>> c58ba2220a9bc1151fbc3bd6ecf34b80a2e9e290
   }
 }
  
 void loop() 
 { 
+  motor.write(55);
+  
   go_to_pos(pos);
   
   collect_data();
