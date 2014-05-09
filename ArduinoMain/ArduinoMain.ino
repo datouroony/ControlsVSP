@@ -12,12 +12,13 @@ Servo Yservo;
 Servo motor;
 
 int sensor_ports[6] = {A0,A1,A2,A3,A4,A5};
-float m[6] = {17.868,29.429,48.02,26.061,22.507,26.336};   //slope of line to map from voltage to length = 
-float b[6] = {-30.39,-61.68,-115.58,-51.49,-45.66,-57.77};
-float k[6] = {.2467,.322,.2764,.2783,.2618,.246};
+float m[6] = {17.868,29.429,48.02,26.061,22.507,26.336};         //slope of line to map from voltage to length = 
+float b[6] = {-30.39,-61.68,-115.58,-51.49,-45.66,-57.77};       //mm
+float k[6] = {.2467,.322,.2764,.2783,.2618,.246};                //mm
+float sensor_length_orig[6] = {13.8,15.2,13,11.48,12.79,15.12};  //mm
 float sensor_voltage;
 float sensor_length;
-float data_collect_time = 5;
+float data_collect_time = 10;
 float data_start_time;
 int i;
 float length;
@@ -42,6 +43,8 @@ void setup()
   motor.write(44);
   
   Serial.begin(9600);
+
+  delay(1000);
 } 
 
 //Calculates lengh of stretch sensor
@@ -87,8 +90,8 @@ void collect_data(){
     Serial.print("s");
     for (i = 0; i < 6; i++){
       length = calculate_length(i);
-      force = k[i]*length;
-      Serial.print(", ");
+      force = -k[i]*(sensor_length_orig[i]- length) / 2;   // converts the k from N/mm to N/m then calcs force
+      Serial.print(",");
       Serial.print(force);
     }
   }
@@ -96,7 +99,7 @@ void collect_data(){
  
 void loop() 
 { 
-  motor.write(55);
+  motor.write(50);
   
   go_to_pos(pos);
   
@@ -108,6 +111,10 @@ void loop()
 
   pos++;
   
+  go_to_pos(0);
+  
+  collect_data();
+
   if (pos >6){
     pos = 0;
   }

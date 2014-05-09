@@ -78,7 +78,7 @@ def main():
       if(len(data) == 4):
         analogData.add(data)
         analogPlot.update(analogData)
-      if(len)(data) == 2):
+      if(len(data) == 2):
         analogData.add(data)
         analogPlot.update(analogData)
     except KeyboardInterrupt:

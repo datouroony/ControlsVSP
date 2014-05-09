@@ -6,45 +6,58 @@ import serial
 import time
 from array import array
 
-PORT = 'COM4' #Port Arduino is on
-#open a connection to the serial port.
-ser = serial.Serial(PORT, 9600, timeout = 1)
+#open a connection to the serial port, try two probably options
 
-filename = str(sys.argv[1])
-dataFile = open(filename+'.dat','w')
 
-while True:
+def read_from_serial(ser):
+	datum = ""
+	buff = ""
+	while (ser.inWaiting()<2):
+		continue
+	while (True):
+		datum = ser.read()
+		if (datum == '\n'):
+			break
+		buff+=datum	
+	return buff
+
+def main():
+	
+	''' Add in when get arroudn to figure out system args in windows
+	if(len(sys.argv) != 2):
+		print 'Example usage: python timestampdata.py "save_data_here"'
+		exit(1)
+	'''
 	try:
-		"""retrieve raw analog number from arduino's ADC"""
-		datum = arduino.read()
-		"""write it to file, along with a timestamp"""
-		print datum
-		dataFile.write(time.strftime("%I:%M:%S")
-		dataFile.write('\n')
-		dataFile.write(datum)
-		dataFile.write('\n')
-	except KeyboardInterrupt:
-		#---allows user to CTRL-C out of the loop and closes/saves
-		dataFile.close()
-		break
+		ser = serial.Serial('COM4', 9600, timeout = 1)
+	except:
+		ser = serial.Serial('COM3', 9600, timeout = 1)
 
-		'''time.sleep(1)
-		ser.readline()
-		#---------read in the data and split line
-		data = ser.readline()
-		timestamp = time.strftime("%I:%M:%S")
+	####CHANGE THIS EVERY TIME#####################################33
+	filename = "May_6_test7"
+	dataFile = open(filename+'.csv','wb') #wb opens as a binary file
 
-		#--- If at least 6 fields exist then parse data
-		if (ast.literal_eval(data)>500):
-			time.sleep(1)
-		else
+	while True:
+		try:
+			"""retrive a line of data from the arduino"""
+			data = read_from_serial(ser);
+			"""write it to file, along with a timestamp"""
+			#only save data if it seems to be a valid entry
+			if ((data[0] == 'c' or data[0] == 's') and len(data)>1):
+				print data
+				dataFile.write("t" + str(time.clock()) + '\n')
+				dataFile.write(data + "\n")
 
+		except KeyboardInterrupt:
+			#---allows user to CTRL-C out of the loop and closes/saves
+			dataFile.close()
+			break
 
-	#Now we can start receiving data
-	read_val = ser.write(val)
-	ser.close()'''
+		#Now we can start receiving data
+		#read_val = ser.write(val)
+	ser.close()
 
-
+main()
 
 # string is a
 a ="s,5,4,3,\nc,1\n"
