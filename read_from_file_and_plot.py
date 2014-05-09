@@ -29,6 +29,7 @@ def parse_data(data):
 	else:
 		return ''
 
+# Calculates the xy plane component of the sum magnitude of all the sensor forces
 def calc_Fxy_magnitude(data_array):
 	i = 0
 	to_rad_30 = math.radians(30)
@@ -51,17 +52,14 @@ def calc_Fxy_magnitude(data_array):
 
 	return sum(x_forces)+sum(y_forces)
 
+#calculates a new averaged value based on an exponential rolling average
 def exp_rolling_avg(current,previous):
-	a = .15
+	a = .5   #must be <1
 	return (a*current + (1-a)*previous)
 
 def main():
-
-	filename = "test"
+	filename = "May_6_test7"    #name of file to read from. Must .csv file
 	dataFile = open(filename+'.csv','rb') #wb opens as a binary file
-
-	filename = "ProcessedData"
-	writeFile = open(filename+'.csv','wb') #wb opens as a binary file
 	parsed_data = 1
 	prev_force = [0,0,0,0,0,0]
 	sensor_forces = [0,0,0,0,0,0]
@@ -70,13 +68,14 @@ def main():
 	command_array = []
 	Fxy_magnitude_prev = 0
 	command = 0
-	while (parsed_data != -1):    ## can do because time stamped first
+	while (parsed_data != -1):    # can do because time stamped first
 		parsed_data = read_line(dataFile)
 		if (isinstance(parsed_data, list)):    #if list, must be sensor data
-			if (len(parsed_data) == 6):
+			if (len(parsed_data) == 6): #include if appropriate amount of data (not cut off during collection)
 				time_array.append(time_stamp)
 				command_array.append(command)
 				i = 0
+				#averaging for each individual sensor force before combined
 				for force in parsed_data:
 					sensor_forces[i] = exp_rolling_avg(force,prev_force[i])
 					i+=1
@@ -87,21 +86,14 @@ def main():
 				Fxy_magnitude_prev = Fxy_magnitude
 				prev_forces = sensor_forces
 
-		elif(isinstance(parsed_data, int)):           #if small amount of data, must be command
+		elif(isinstance(parsed_data, int)):           #if int, must be command
 			print command + 1
 			if(parsed_data < 10):
-				command = (parsed_data + 1)*.1
-		else: 
+				command = parsed_data + 1
+		else: 					      #otherwise, must be timestamp
 			time_stamp = parsed_data
 	pylab.plot(time_array,data_array)
 	pylab.plot(time_array,command_array)
-
-	i = 0
-	writeFile.write("Time,NetForce,Command")
-	while(i<len(data_array)):
-		writeFile.write(str(time_array[i]) + "," + str(data_array[i]) + "," + str(command_array[i]) + "\n")
-		i += 1
-
 	pylab.show()
 
 main()	
