@@ -52,12 +52,16 @@ def calc_Fxy_magnitude(data_array):
 	return sum(x_forces)+sum(y_forces)
 
 def exp_rolling_avg(current,previous):
-	a = .5
+	a = .15
 	return (a*current + (1-a)*previous)
 
 def main():
-	filename = "May_6_test7"
+
+	filename = "test"
 	dataFile = open(filename+'.csv','rb') #wb opens as a binary file
+
+	filename = "ProcessedData"
+	writeFile = open(filename+'.csv','wb') #wb opens as a binary file
 	parsed_data = 1
 	prev_force = [0,0,0,0,0,0]
 	sensor_forces = [0,0,0,0,0,0]
@@ -86,11 +90,18 @@ def main():
 		elif(isinstance(parsed_data, int)):           #if small amount of data, must be command
 			print command + 1
 			if(parsed_data < 10):
-				command = parsed_data + 1
+				command = (parsed_data + 1)*.1
 		else: 
 			time_stamp = parsed_data
 	pylab.plot(time_array,data_array)
 	pylab.plot(time_array,command_array)
+
+	i = 0
+	writeFile.write("Time,NetForce,Command")
+	while(i<len(data_array)):
+		writeFile.write(str(time_array[i]) + "," + str(data_array[i]) + "," + str(command_array[i]) + "\n")
+		i += 1
+
 	pylab.show()
 
 main()	
