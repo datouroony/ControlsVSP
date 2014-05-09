@@ -1,8 +1,8 @@
 
 /*Notes on user interface:
 
-prefix letter: c -- servo command (byte int)
-               s -- sensor values (number,number....)
+prefix letter: c -- servo command (int)
+               s -- sensor values (,float,float....)
 */
 
 #include <Servo.h> 
@@ -28,11 +28,11 @@ int ypos;
 
 void setup() 
 { 
-  Xservo.attach(8);  // attaches the servo on pin 9 to the servo object 
-  Yservo.attach(7);  // attaches the servo on pin 9 to the servo object 
+  Xservo.attach(8);
+  Yservo.attach(7); 
   motor.attach(9);
   delay(1000);
-  //initializes the motor
+  //initialization sequence for motor to work
   motor.write(40);
   for(pos = 44;pos <  50; pos += 1)   
   {                                  
@@ -44,6 +44,7 @@ void setup()
   Serial.begin(9600);
 } 
 
+//Calculates lengh of stretch sensor
 float calculate_length(int sensor){
   sensor_voltage = (5.0 / 1023.0) * analogRead(sensor_ports[sensor]);
   sensor_length = m[sensor] * sensor_voltage + b[sensor];
@@ -77,6 +78,8 @@ void go_to_pos(int posit){
     
 }
 
+//Collects analog in values and calculates the force
+//based of thee length and k constant
 void collect_data(){
   data_start_time = millis();
   while(millis()-data_start_time < data_collect_time*1000){
@@ -97,6 +100,10 @@ void loop()
   
   go_to_pos(pos);
   
+  collect_data();
+  
+  go_to_pos(pos);
+
   collect_data();
 
   pos++;
